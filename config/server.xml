@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!--
+    Copyright (C) GridGain Systems. All Rights Reserved.
+    _________        _____ __________________        _____
+    __  ____/___________(_)______  /__  ____/______ ____(_)_______
+    _  / __  __  ___/__  / _  __  / _  / __  _  __ `/__  / __  __ \
+    / /_/ /  _  /    _  /  / /_/ /  / /_/ /  / /_/ / _  /  _  / / /
+    \____/   /_/     /_/   \_,__/   \____/   \__,_/  /_/   /_/ /_/
+-->
+
+<!--
+    POM file.
+-->
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="http://www.springframework.org/schema/beans
+                           http://www.springframework.org/schema/beans/spring-beans.xsd
+                           http://www.springframework.org/schema/util
+                           http://www.springframework.org/schema/util/spring-util.xsd">
+    <bean class="org.apache.ignite.configuration.IgniteConfiguration">
+
+        <property name="discoverySpi">
+            <bean class="org.apache.ignite.spi.discovery.tcp.TcpDiscoverySpi">
+                <property name="ipFinder">
+                    <bean class="org.apache.ignite.spi.discovery.tcp.ipfinder.vm.TcpDiscoveryVmIpFinder">
+                        <property name="addresses">
+                            <list>
+                                <value>127.0.0.1:47500..47510</value>
+                            </list>
+                        </property>
+                    </bean>
+                </property>
+            </bean>
+        </property>
+
+        <property name="pluginConfigurations">
+            <list>
+                <!-- GridGain plugin configuration bean. -->
+                <bean class="org.gridgain.grid.configuration.GridGainConfiguration">
+                    <!-- For example, this is how rolling updates are enabled. -->
+                    <property name="rollingUpdatesEnabled" value="true"/>
+                </bean>
+            </list>
+        </property>
+
+        <property name="cacheConfiguration">
+            <list>
+                <bean class="org.apache.ignite.configuration.CacheConfiguration">
+                    <property name="name" value="Person"/>
+                    <property name="cacheMode" value="PARTITIONED"/>
+                    <property name="atomicityMode" value="ATOMIC"/>
+                    <property name="sqlSchema" value="PUBLIC"/>
+
+                    <property name="queryEntities">
+                        <list>
+                            <bean class="org.apache.ignite.cache.QueryEntity">
+                                <property name="keyType" value="PersonKey"/>
+                                <property name="valueType" value="PersonValue"/>
+                                <property name="tableName" value="Person"/>
+
+                                <property name="keyFields">
+                                    <list>
+                                        <value>id</value>
+                                        <value>city_id</value>
+                                    </list>
+                                </property>
+
+                                <property name="fields">
+                                    <map>
+                                        <entry key="id" value="java.lang.Integer"/>
+                                        <entry key="city_id" value="java.lang.Integer"/>
+                                        <entry key="name" value="java.lang.String"/>
+                                        <entry key="age" value="java.lang.Integer"/>
+                                        <entry key="company" value="java.lang.String"/>
+                                    </map>
+                                </property>
+
+                                <property name="aliases">
+                                    <map>
+                                        <entry key="id" value="id"/>
+                                        <entry key="city_id" value="city_id"/>
+                                        <entry key="name" value="name"/>
+                                        <entry key="age" value="age"/>
+                                        <entry key="company" value="company"/>
+                                    </map>
+                                </property>
+                            </bean>
+                        </list>
+                    </property>
+                </bean>
+                  </list>
+        </property>
+
+    </bean>
+
+</beans>
